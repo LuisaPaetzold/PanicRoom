@@ -12,8 +12,8 @@ public class Enemy : MonoBehaviour
     private GameMaster gameMaster;
 
     private bool retreated = true;
-    internal float currentRetreatTime = 0f;
-    internal float currentAttackTime = 0f;
+    public float currentRetreatTime = 0f;
+    public float currentAttackTime = 0f;
 
     void Start ()
     {
@@ -57,6 +57,7 @@ public class Enemy : MonoBehaviour
         {
             transform.position = RetreatPosition.transform.position;
             retreated = true;
+            currentAttackTime = 0f;
         }
     }
 
