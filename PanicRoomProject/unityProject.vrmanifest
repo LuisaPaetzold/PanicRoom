@@ -1,0 +1,16 @@
+{
+  "source": "Unity",
+  "applications": [
+    {
+      "app_key": "application.generated.unity.panicroomproject.exe",
+      "launch_type": "url",
+      "url": "steam://launch/",
+      "action_manifest_path": "C:\\Users\\GameDev\\Documents\\GitHub\\PanicRoom\\PanicRoomProject\\actions.json",
+      "strings": {
+        "en_us": {
+          "name": "PanicRoomProject [Testing]"
+        }
+      }
+    }
+  ]
+}
