@@ -15,11 +15,15 @@ public class Flashlight : MonoBehaviour
     public float maxPower = 100f;
     public Slider slider;
 
+    private GameMaster gameMaster;
+
     void Start ()
     {
         lights = GetComponentsInChildren<Light>();
 
         currentPower = maxPower;
+
+        gameMaster = FindObjectOfType<GameMaster>();
 	}
 	
 	void Update ()
@@ -33,49 +37,55 @@ public class Flashlight : MonoBehaviour
 
         HandleLampCharge();
 
-
-        RaycastHit hit;
-        if (Physics.SphereCast(transform.position, 1, transform.forward, out hit, 100))
+        if (lightsOn)
         {
-            Enemy enemy = hit.collider.gameObject.GetComponent<Enemy>();
-            if (enemy != null)
+            RaycastHit hit;
+            if (Physics.SphereCast(transform.position, 1, transform.forward, out hit, 100))
             {
-                if (oldHit != enemy)
+                Enemy enemy = hit.collider.gameObject.GetComponent<Enemy>();
+                if (enemy != null)
                 {
-                    enemy.StartShaking();
-                }
+                    if (oldHit != enemy)
+                    {
+                        enemy.StartShaking();
+                    }
 
-                currentLightTimer += Time.deltaTime;
-                if (currentLightTimer >= enemy.ScareTime)
+                    currentLightTimer += Time.deltaTime;
+                    if (currentLightTimer >= enemy.ScareTime)
+                    {
+                        enemy.ScareAway();
+                        currentLightTimer = 0f;
+                    }
+                }
+                else
                 {
-                    enemy.ScareAway();
                     currentLightTimer = 0f;
                 }
+
+                oldHit = hit.collider.gameObject;
             }
             else
             {
                 currentLightTimer = 0f;
+                oldHit = null;
             }
-
-            oldHit = hit.collider.gameObject;
-        }
-        else
-        {
-            currentLightTimer = 0f;
-            oldHit = null;
         }
     }
 
 
     public void LampTrigger()
     {
-        if (lightsOn)
+        if (gameMaster != null
+            && gameMaster.gameIsRunning)
         {
-            LampOff();
-        }
-        else
-        {
-            LampOn();
+            if (lightsOn)
+            {
+                LampOff();
+            }
+            else
+            {
+                LampOn();
+            }
         }
     }
 

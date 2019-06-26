@@ -6,6 +6,7 @@ public class GameMaster : MonoBehaviour
 {
     private Enemy enemy;
     private Player player;
+    private Flashlight flashlight;
 
     public float WaitTime = 2f;
     public float AttackTime = 10f;
@@ -16,6 +17,7 @@ public class GameMaster : MonoBehaviour
     {
         enemy = FindObjectOfType<Enemy>();
         player = FindObjectOfType<Player>();
+        flashlight = FindObjectOfType<Flashlight>();
     }
 	
 	void Update ()
@@ -36,8 +38,14 @@ public class GameMaster : MonoBehaviour
                 {
                     enemy.Attack();
                     gameIsRunning = false;
+                    //flashlight.LampOff();
                 }
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            enemy.Attack();
         }
 
 

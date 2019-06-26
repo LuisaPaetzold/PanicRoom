@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public GameObject RetreatPosition;
+    public GameObject ScarePosition;
     public GameObject movePositions;
     public float ScareTime = 2f;
 
@@ -12,10 +13,12 @@ public class Enemy : MonoBehaviour
     private GameMaster gameMaster;
 
     private bool retreated = true;
+    private bool jumpScare = false;
     public float currentRetreatTime = 0f;
     public float currentAttackTime = 0f;
 
-    public Animator shakeAnimator;
+    public Animator anim;
+    public Light enemyLight;
 
     void Start ()
     {
@@ -25,6 +28,11 @@ public class Enemy : MonoBehaviour
         if (RetreatPosition != null)
         {
             transform.position = RetreatPosition.transform.position;
+        }
+
+        if (enemyLight != null)
+        {
+            enemyLight.intensity = 0;
         }
     }
 
@@ -49,7 +57,11 @@ public class Enemy : MonoBehaviour
     {
         if (player != null)
         {
-            //transform.LookAt(player.transform);
+            transform.LookAt(player.transform);
+        }
+        if (jumpScare)
+        {
+            transform.position = ScarePosition.transform.position;
         }
     }
 
@@ -60,9 +72,9 @@ public class Enemy : MonoBehaviour
             transform.position = RetreatPosition.transform.position;
             retreated = true;
             currentAttackTime = 0f;
-            if (shakeAnimator != null)
+            if (anim != null)
             {
-                shakeAnimator.SetTrigger("StopShake");
+                anim.SetTrigger("StopShake");
             }
         }
     }
@@ -90,7 +102,31 @@ public class Enemy : MonoBehaviour
     {
         Debug.Log("ATTACK");
         currentAttackTime = 0f;
-        ScareAway();
+        StartCoroutine(JumpScare());
+        //ScareAway();
+    }
+
+    private IEnumerator JumpScare()
+    {
+        if (ScarePosition != null)
+        {
+            jumpScare = true;
+            if (enemyLight != null)
+            {
+                enemyLight.intensity = 5;
+            }
+            if (anim != null)
+            {
+                anim.SetTrigger("Attack");
+            }
+            yield return new WaitForSeconds(1);
+            if (enemyLight != null)
+            {
+                enemyLight.intensity = 0;
+            }
+            jumpScare = false;
+            ScareAway();
+        }
     }
 
     public bool IsRetreated()
@@ -100,9 +136,9 @@ public class Enemy : MonoBehaviour
 
     public void StartShaking()
     {
-        if (shakeAnimator != null)
+        if (anim != null)
         {
-            shakeAnimator.SetTrigger("StartShake");
+            anim.SetTrigger("StartShake");
         }
     }
 }
