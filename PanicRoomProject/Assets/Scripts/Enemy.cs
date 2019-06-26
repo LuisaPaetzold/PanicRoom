@@ -15,6 +15,8 @@ public class Enemy : MonoBehaviour
     public float currentRetreatTime = 0f;
     public float currentAttackTime = 0f;
 
+    public Animator shakeAnimator;
+
     void Start ()
     {
         player = FindObjectOfType<Player>();
@@ -58,6 +60,10 @@ public class Enemy : MonoBehaviour
             transform.position = RetreatPosition.transform.position;
             retreated = true;
             currentAttackTime = 0f;
+            if (shakeAnimator != null)
+            {
+                shakeAnimator.SetTrigger("StopShake");
+            }
         }
     }
 
@@ -90,5 +96,13 @@ public class Enemy : MonoBehaviour
     public bool IsRetreated()
     {
         return retreated;
+    }
+
+    public void StartShaking()
+    {
+        if (shakeAnimator != null)
+        {
+            shakeAnimator.SetTrigger("StartShake");
+        }
     }
 }

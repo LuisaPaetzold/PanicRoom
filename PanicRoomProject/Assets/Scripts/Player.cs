@@ -1,16 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VRTK;
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour
+{
+    public VRTK_ControllerEvents rightController;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    void Start ()
+    {
+
+    }
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+	void Update ()
+    {
+        if (rightController != null)
+        {
+            if (rightController.IsButtonPressed(VRTK_ControllerEvents.ButtonAlias.TriggerClick))
+            {
+                Debug.Log("TRIGGER"); 
+            }
+        }
+    }
 }
