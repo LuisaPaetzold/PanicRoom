@@ -41,7 +41,8 @@ public class ActivateVibModules : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.W))
         {
-            writeToArduino(1, 100, 100);
+			StartCoroutine(shiftVibrations(0, 1, 150));
+            //writeToArduino(1, 100, 100);
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
@@ -95,20 +96,41 @@ public class ActivateVibModules : MonoBehaviour
 
     IEnumerator steadyRise(byte[] sensors, int maxStrength, int timeToMax)
     {
-        int currentStrength = 10;
-        int timeStep = timeToMax / (maxStrength - 10) / 10;
-        for (int i = 10; i < maxStrength && i>0; i=i+currentStrength)
+        int currentStrength = 5;
+        int timeStep = timeToMax / (maxStrength - 5) / 5;
+        for (int i = 5; i < maxStrength && i>0; i=i+currentStrength)
         {
             for (int j = 0; j < sensors.Length; j++)
             {
                 
                 writeToArduino(sensors[j], (byte)i, 100);
             }
-            yield return new WaitForSeconds(50/1000f);
-            if (i == maxStrength - 10)
+            yield return new WaitForSeconds(25/1000f);
+            if (i == maxStrength - 5)
             {
-                currentStrength = -currentStrength;
+                currentStrength = -currentStrength*3;
+
             }
         }
     }
+
+	IEnumerator shiftVibrations(byte fromModule, byte toModule, int maxStrength){
+		byte activeModule = fromModule;
+		int currentStrength = 5;
+		for (int i = 5; i < maxStrength && i>0; i=i+currentStrength)
+		{
+				writeToArduino(activeModule, (byte)i, 20);
+
+			yield return new WaitForSeconds(10/1000f);
+			if (i >= maxStrength/1.5)
+			{
+				activeModule = toModule;
+			}
+			if (i == maxStrength - 5)
+			{
+				currentStrength = -currentStrength;
+			}
+		}
+	}	
+
 }
