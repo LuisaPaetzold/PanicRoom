@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO.Ports;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +16,16 @@ public class Flashlight : MonoBehaviour
     public float maxPower = 100f;
     public Slider slider;
 
+	public short portNumber;
+	public int baudRate;
+
+	private float degree;
+
+
+
     private GameMaster gameMaster;
+
+	private SerialPort arduinoPort;
 
     void Start ()
     {
@@ -24,16 +34,29 @@ public class Flashlight : MonoBehaviour
         currentPower = maxPower;
 
         gameMaster = FindObjectOfType<GameMaster>();
+
+		arduinoPort = new SerialPort("COM" + portNumber, baudRate);
+		arduinoPort.Open();
+		arduinoPort.ReadTimeout = 12;
+
 	}
-	
+
 	void Update ()
     {
+		degree = (float) System.Convert.ToDouble(arduinoPort.ReadLine ());
+
         Debug.Log(currentPower);
 
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            LampTrigger();
-        }
+		Debug.Log(degree.ToString ());
+
+		if (degree <= 10 && !lightsOn) {
+			LampTrigger ();
+
+		} else if (degree > 10 && lightsOn) {
+			LampTrigger ();
+
+		}
+			
 
         HandleLampCharge();
 
