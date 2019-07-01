@@ -27,7 +27,7 @@ public class GameMaster : MonoBehaviour
         {
             if (enemy.IsRetreated())
             {
-                Debug.Log("RetreatTime: " + enemy.currentRetreatTime+ " of: " + WaitTime);
+               // Debug.Log("RetreatTime: " + enemy.currentRetreatTime+ " of: " + WaitTime);
                 if (enemy.currentRetreatTime > WaitTime)
                 {
                     enemy.ChoosePositionAndMove();
@@ -35,7 +35,7 @@ public class GameMaster : MonoBehaviour
             }
             else
             {
-                Debug.Log("AttackTime: " + enemy.currentAttackTime + " of: " + AttackTime);
+               // Debug.Log("AttackTime: " + enemy.currentAttackTime + " of: " + AttackTime);
                 if (enemy.currentAttackTime > AttackTime)
                 {
                     enemy.Attack();

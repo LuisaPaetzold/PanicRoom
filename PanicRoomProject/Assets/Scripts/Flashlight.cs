@@ -21,6 +21,8 @@ public class Flashlight : MonoBehaviour
 
 	private float degree;
 
+    private bool fingerTriggered;
+
 
 
     private GameMaster gameMaster;
@@ -43,20 +45,31 @@ public class Flashlight : MonoBehaviour
 
 	void Update ()
     {
-		degree = (float) System.Convert.ToDouble(arduinoPort.ReadLine ());
+		degree = (float) System.Convert.ToDouble(arduinoPort.ReadLine());
 
-        Debug.Log(currentPower);
+        //Debug.Log(currentPower);
 
-		Debug.Log(degree.ToString ());
+		Debug.Log(degree.ToString());
 
-		if (degree <= 10 && !lightsOn) {
-			LampTrigger ();
+        if (!fingerTriggered)
+        {
+            if (degree <= 15)
+            {
+                fingerTriggered = true;
+            }
 
-		} else if (degree > 10 && lightsOn) {
-			LampTrigger ();
-
-		}
-			
+            if (fingerTriggered)
+            {
+                LampTrigger();
+            }
+        }
+        else if(fingerTriggered)
+        {
+            if (degree > 15)
+            {
+                fingerTriggered = false;
+            }
+        }
 
         HandleLampCharge();
 
@@ -76,6 +89,7 @@ public class Flashlight : MonoBehaviour
                     currentLightTimer += Time.deltaTime;
                     if (currentLightTimer >= enemy.ScareTime)
                     {
+                        LampOff();
                         enemy.ScareAway();
                         currentLightTimer = 0f;
                     }
