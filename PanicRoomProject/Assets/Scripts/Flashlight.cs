@@ -22,6 +22,7 @@ public class Flashlight : MonoBehaviour
 	private float degree;
 
     private bool fingerTriggered;
+    public float GloveThreashhold = 10f;
 
 
 
@@ -40,12 +41,11 @@ public class Flashlight : MonoBehaviour
 		arduinoPort = new SerialPort("COM" + portNumber, baudRate);
 		arduinoPort.Open();
 		arduinoPort.ReadTimeout = 12;
-
 	}
 
 	void Update ()
     {
-		degree = (float) System.Convert.ToDouble(arduinoPort.ReadLine());
+        degree = (float) System.Convert.ToDouble(arduinoPort.ReadLine());
 
         //Debug.Log(currentPower);
 
@@ -53,7 +53,7 @@ public class Flashlight : MonoBehaviour
 
         if (!fingerTriggered)
         {
-            if (degree <= 15)
+            if (degree <= GloveThreashhold)
             {
                 fingerTriggered = true;
             }
@@ -65,7 +65,7 @@ public class Flashlight : MonoBehaviour
         }
         else if(fingerTriggered)
         {
-            if (degree > 15)
+            if (degree > GloveThreashhold)
             {
                 fingerTriggered = false;
             }
