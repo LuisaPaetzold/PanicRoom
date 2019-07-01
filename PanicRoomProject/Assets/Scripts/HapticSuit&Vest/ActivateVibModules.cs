@@ -96,22 +96,25 @@ public class ActivateVibModules : MonoBehaviour
 
     IEnumerator steadyRise(byte[] sensors, int maxStrength, int timeToMax)
     {
-        int currentStrength = 5;
-        int timeStep = timeToMax / (maxStrength - 5) / 5;
-        for (int i = 5; i < maxStrength && i>0; i=i+currentStrength)
-        {
-            for (int j = 0; j < sensors.Length; j++)
-            {
-                
-                writeToArduino(sensors[j], (byte)i, 100);
-            }
-            yield return new WaitForSeconds(25/1000f);
-            if (i == maxStrength - 5)
-            {
-                currentStrength = -currentStrength*3;
+		int step = 5;
+		float time = timeToMax / (maxStrength / step);
+		for (int i = 5; i < maxStrength && i>0; i=i+step)
+		{
+			for (int j = 0; j < sensors.Length; j++)
+			{               
+				writeToArduino(sensors[j], (byte)i, 100);
+			}
+			yield return new WaitForSeconds(time / 1000f);
+			if (i >= maxStrength * 0.75f && step == 5) {
+				step = step + 10;
+			}
 
-            }
-        }
+			if (i >= maxStrength - step)
+			{
+				step = -step*3;
+
+			}
+		}
     }
 
 	IEnumerator shiftVibrations(byte fromModule, byte toModule, int maxStrength){
