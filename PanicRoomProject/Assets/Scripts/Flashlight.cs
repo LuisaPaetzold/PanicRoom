@@ -49,7 +49,7 @@ public class Flashlight : MonoBehaviour
 
         //Debug.Log(currentPower);
 
-		Debug.Log(degree.ToString());
+		//Debug.Log(degree.ToString());
 
         if (!fingerTriggered)
         {
@@ -69,6 +69,11 @@ public class Flashlight : MonoBehaviour
             {
                 fingerTriggered = false;
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            LampTrigger();
         }
 
         HandleLampCharge();
