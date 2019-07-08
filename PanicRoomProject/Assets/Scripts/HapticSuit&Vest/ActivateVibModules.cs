@@ -21,7 +21,14 @@ public class ActivateVibModules : MonoBehaviour
 	void Start()
 	{
 		arduinoPort = new SerialPort("COM" + portNumber, baudRate);
-		arduinoPort.Open();
+        try
+        {
+            arduinoPort.Open();
+        }
+        catch
+        {
+
+        }
 	}
 
 	void Update()
@@ -103,8 +110,15 @@ public class ActivateVibModules : MonoBehaviour
 		byte[] inputToArduino = new byte[] { vibro, intensity, duration };
 		if (arduinoPort.IsOpen == false)
 		{
-			arduinoPort.Open();
-		}
+            try
+            {
+                arduinoPort.Open();
+            }
+            catch
+            {
+                return;
+            }
+        }
 		arduinoPort.Write(inputToArduino, 0, 3);
 	}
 	#endregion

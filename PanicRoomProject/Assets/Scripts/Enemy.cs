@@ -8,12 +8,14 @@ public class Enemy : MonoBehaviour
     public GameObject ScarePosition;
     public GameObject movePositions;
     public float ScareTime = 2f;
+    public ActivateVibModules vib;
 
     private Player player;
     private GameMaster gameMaster;
 
     private bool retreated = true;
     private bool jumpScare = false;
+    internal bool isLitOn = false;
     public float currentRetreatTime = 0f;
     public float currentAttackTime = 0f;
 
@@ -47,7 +49,10 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                currentAttackTime += Time.deltaTime;
+                if (!isLitOn)
+                {
+                    currentAttackTime += Time.deltaTime;
+                }
             }
         }
 		
@@ -72,6 +77,7 @@ public class Enemy : MonoBehaviour
             transform.position = RetreatPosition.transform.position;
             retreated = true;
             currentAttackTime = 0f;
+            vib.shiftVibrationsLegs(150);
             if (anim != null)
             {
                 anim.SetTrigger("StopShake");
@@ -103,6 +109,7 @@ public class Enemy : MonoBehaviour
         Debug.Log("ATTACK");
         currentAttackTime = 0f;
         StartCoroutine(JumpScare());
+        vib.shortFuzzLoopAll(200, 10, 4, 150);
         //ScareAway();
     }
 

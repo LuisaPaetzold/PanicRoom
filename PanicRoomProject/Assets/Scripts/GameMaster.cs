@@ -100,6 +100,7 @@ public class GameMaster : MonoBehaviour
 
     private IEnumerator LoadLevelWithDelay(float delay)
     {
+        aData.ClosePort();
         yield return new WaitForSeconds(delay);
         SceneManager.LoadScene(2);
     }

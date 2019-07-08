@@ -29,25 +29,49 @@ public class ArduinoData : MonoBehaviour
     {
         pulseSerial = new SerialPort(pulseCOM, pulseBaudRate);
         audioSource = GetComponent<AudioSource>();
-        pulseSerial.Open();
+        try
+        {
+            pulseSerial.Open();
+        }
+        catch
+        {
+
+        }
+        bpm = 65;
+        beatInterval = 900;
+        latestSample = 0;
         StartCoroutine(PulseCoroutine());
     }
     private void Update()
     {
-        getPulseData();
-        CalculateWaitingTime();
-
+        if (pulseSerial != null && pulseSerial.IsOpen)
+        {
+            getPulseData();
+            CalculateDifficultyTime();
+        }
+        else
+        {
+            CalculateDifficultyTime();
+        }
     }
 
     public void getPulseData()
     {
         string pulseStr = pulseSerial.ReadLine();
         char sep = ',';
-        //Debug.Log(pulseStr);
+        Debug.Log(pulseStr);
 
-        newBpm = int.Parse(pulseStr.Split(sep)[0]);
-        newBeatInterval = int.Parse(pulseStr.Split(sep)[1]);
-        newLatestSample = int.Parse(pulseStr.Split(sep)[2]);
+        string[] a = pulseStr.Split(sep);
+        if (a.Length < 3)
+        {
+            return;
+        }
+
+        newBpm = int.Parse(a[0]);
+        newBeatInterval = int.Parse(a[1]);
+        newLatestSample = int.Parse(a[2]);
+
+
 
         if (firstFrame)
         {
@@ -73,6 +97,13 @@ public class ArduinoData : MonoBehaviour
                 latestSample = newLatestSample;
             }
         }
+
+        if (newBpm == 0)
+        {
+            bpm = 65;
+            beatInterval = 900;
+            latestSample = 0;
+        }
     }
 
     public IEnumerator PulseCoroutine()
@@ -85,10 +116,15 @@ public class ArduinoData : MonoBehaviour
         }
     }
 
-    public void CalculateWaitingTime()
+    public void CalculateDifficultyTime()
     {
         float awayFromLowerBound = bpm - 55f;
         difficultyMultiplier = awayFromLowerBound / (150f - 55f);
         //Debug.Log(scaled);
+    }
+
+    public void ClosePort()
+    {
+        //pulseSerial.Close();
     }
 }

@@ -23,8 +23,10 @@ public class Flashlight : MonoBehaviour
 
     private bool fingerTriggered;
     public float GloveThreashhold = 10f;
+    public ActivateVibModules vib;
+    private bool scaredActivated = false;
 
-
+    private Enemy en;
 
     private GameMaster gameMaster;
 
@@ -46,6 +48,7 @@ public class Flashlight : MonoBehaviour
 	void Update ()
     {
         degree = (float) System.Convert.ToDouble(arduinoPort.ReadLine());
+        
 
         //Debug.Log(currentPower);
 
@@ -83,33 +86,55 @@ public class Flashlight : MonoBehaviour
             RaycastHit hit;
             if (Physics.SphereCast(transform.position, 1, transform.forward, out hit, 100))
             {
+                Debug.Log("Hit: " + hit.collider.gameObject);
                 Enemy enemy = hit.collider.gameObject.GetComponent<Enemy>();
+                en = enemy;
                 if (enemy != null)
                 {
+                    enemy.isLitOn = true;   // enemy is hit by light, tell it
                     if (oldHit != enemy)
                     {
                         enemy.StartShaking();
                     }
-
+                    if(scaredActivated == false)
+                    {
+                        scaredActivated = true;
+                        vib.steadyRiseArms(200, (int) enemy.ScareTime * 1000);
+                      
+                    }
                     currentLightTimer += Time.deltaTime;
                     if (currentLightTimer >= enemy.ScareTime)
                     {
                         LampOff();
+                        scaredActivated = false;
                         enemy.ScareAway();
                         currentLightTimer = 0f;
                     }
                 }
                 else
                 {
+                    scaredActivated = false;
                     currentLightTimer = 0f;
+                    if (en != null)
+                    {
+                        // enemy is not hit by light, tell it
+                        en.isLitOn = false;
+                    }
                 }
 
                 oldHit = hit.collider.gameObject;
             }
             else
             {
+                scaredActivated = false;
                 currentLightTimer = 0f;
                 oldHit = null;
+
+                if (en != null)
+                {
+                    // enemy is not hit by light, tell it
+                    en.isLitOn = false;
+                }
             }
         }
     }
