@@ -55,7 +55,6 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
-		
 	}
 
     private void LateUpdate()
@@ -143,9 +142,22 @@ public class Enemy : MonoBehaviour
 
     public void StartShaking()
     {
-        if (anim != null)
+        StartCoroutine(Shake());
+    }
+
+    private IEnumerator Shake()
+    {
+        while (isLitOn)
         {
-            anim.SetTrigger("StartShake");
+            transform.position += new Vector3(0.1f, 0, 0.1f);
+            yield return new WaitForEndOfFrame();
+            transform.position -= new Vector3(0.1f, 0, 0.1f);
+            yield return new WaitForEndOfFrame();
+            transform.position += new Vector3(-0.1f, 0, -0.1f);
+            yield return new WaitForEndOfFrame();
+            transform.position -= new Vector3(-0.1f, 0, -0.1f);
+            yield return new WaitForEndOfFrame();
+
         }
     }
 }

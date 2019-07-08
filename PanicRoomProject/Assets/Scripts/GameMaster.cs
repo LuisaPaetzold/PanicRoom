@@ -11,8 +11,13 @@ public class GameMaster : MonoBehaviour
     private GameResultSave save;
     private ArduinoData aData;
 
-    public float WaitTime = 2f;
-    public float AttackTime = 10f;
+    public float WaitTimeMin = 2f;
+    public float WaitTimeMax = 5f;
+    public float AttackTimeMin = 10f;
+    public float AttackTimeMax = 20f;
+
+    private float AttackTime = 5f;
+    private float WaitTime = 20f;
 
     public float SecondsToWinGame = 180f;
 
@@ -93,8 +98,8 @@ public class GameMaster : MonoBehaviour
     {
         if (aData != null)
         {
-            WaitTime = Mathf.Lerp(2, 4, aData.difficultyMultiplier);
-            AttackTime = Mathf.Lerp(7, 15, aData.difficultyMultiplier);
+            WaitTime = Mathf.Lerp(WaitTimeMin, WaitTimeMax, aData.difficultyMultiplier);
+            AttackTime = Mathf.Lerp(AttackTimeMin, AttackTimeMax, aData.difficultyMultiplier);
         }
     }
 
