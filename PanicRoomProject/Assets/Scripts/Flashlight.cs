@@ -19,7 +19,7 @@ public class Flashlight : MonoBehaviour
 	public short portNumber;
 	public int baudRate;
 
-	private float degree;
+	private float degree = 180;
 
     private bool fingerTriggered;
     public float GloveThreashhold = 10f;
@@ -29,8 +29,11 @@ public class Flashlight : MonoBehaviour
     private Enemy en;
 
     private GameMaster gameMaster;
+    private AudioSource audioSource;
 
-	private SerialPort arduinoPort;
+    public AudioClip FlashlightSound;
+
+    private SerialPort arduinoPort;
 
     void Start ()
     {
@@ -39,20 +42,34 @@ public class Flashlight : MonoBehaviour
         currentPower = maxPower;
 
         gameMaster = FindObjectOfType<GameMaster>();
+        audioSource = FindObjectOfType<AudioSource>();
 
-		arduinoPort = new SerialPort("COM" + portNumber, baudRate);
-		arduinoPort.Open();
-		arduinoPort.ReadTimeout = 12;
+        arduinoPort = new SerialPort("COM" + portNumber, baudRate);
+    
+
+        try
+        {
+            arduinoPort.Open();
+            arduinoPort.ReadTimeout = 12;
+        }
+        catch
+        {
+
+        }
+		
 	}
 
 	void Update ()
     {
-        degree = (float) System.Convert.ToDouble(arduinoPort.ReadLine());
-        
+        if (arduinoPort != null &&
+            arduinoPort.IsOpen)
+        {
+            degree = (float)System.Convert.ToDouble(arduinoPort.ReadLine());
+        }
 
         //Debug.Log(currentPower);
 
-		//Debug.Log(degree.ToString());
+		Debug.Log(degree.ToString());
 
         if (!fingerTriggered)
         {
@@ -109,6 +126,7 @@ public class Flashlight : MonoBehaviour
                         scaredActivated = false;
                         enemy.ScareAway();
                         currentLightTimer = 0f;
+                        enemy.isLitOn = false;   // enemy is no longer hit by light, tell it
                     }
                 }
                 else
@@ -152,6 +170,11 @@ public class Flashlight : MonoBehaviour
             else
             {
                 LampOn();
+            }
+
+            if (audioSource != null)
+            {
+                audioSource.PlayOneShot(FlashlightSound);
             }
         }
     }

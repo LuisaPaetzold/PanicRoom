@@ -12,6 +12,9 @@ public class Enemy : MonoBehaviour
 
     private Player player;
     private GameMaster gameMaster;
+    private AudioSource audioSource;
+
+    public AudioClip JumpScareSound;
 
     private bool retreated = true;
     private bool jumpScare = false;
@@ -26,6 +29,7 @@ public class Enemy : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
         gameMaster = FindObjectOfType<GameMaster>();
+        audioSource = FindObjectOfType<AudioSource>();
 
         if (RetreatPosition != null)
         {
@@ -77,10 +81,7 @@ public class Enemy : MonoBehaviour
             retreated = true;
             currentAttackTime = 0f;
             vib.shiftVibrationsLegs(150);
-            if (anim != null)
-            {
-                anim.SetTrigger("StopShake");
-            }
+            
         }
     }
 
@@ -105,6 +106,10 @@ public class Enemy : MonoBehaviour
 
     public void Attack()
     {
+        if (audioSource != null)
+        {
+            audioSource.PlayOneShot(JumpScareSound);
+        }
         Debug.Log("ATTACK");
         currentAttackTime = 0f;
         StartCoroutine(JumpScare());

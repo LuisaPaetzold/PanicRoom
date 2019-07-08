@@ -59,7 +59,7 @@ public class ArduinoData : MonoBehaviour
     {
         string pulseStr = pulseSerial.ReadLine();
         char sep = ',';
-        Debug.Log(pulseStr);
+        //Debug.Log(pulseStr);
 
         string[] a = pulseStr.Split(sep);
         if (a.Length < 3)
