@@ -59,7 +59,7 @@ namespace Tobii.Research.Unity.Examples
 
             }
 
-            
+            Debug.Log(info);
         }
     }
 }

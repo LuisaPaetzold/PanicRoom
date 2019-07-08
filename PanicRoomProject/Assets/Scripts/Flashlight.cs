@@ -103,7 +103,7 @@ public class Flashlight : MonoBehaviour
             RaycastHit hit;
             if (Physics.SphereCast(transform.position, 1, transform.forward, out hit, 100))
             {
-                Debug.Log("Hit: " + hit.collider.gameObject);
+                //Debug.Log("Hit: " + hit.collider.gameObject);
                 Enemy enemy = hit.collider.gameObject.GetComponent<Enemy>();
                 en = enemy;
                 if (enemy != null)

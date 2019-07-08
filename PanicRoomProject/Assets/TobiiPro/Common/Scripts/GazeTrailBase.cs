@@ -111,6 +111,11 @@ namespace Tobii.Research.Unity
             OnStart();
         }
 
+        public Transform GetLatestObjectHit()
+        {
+            return _latestHitObject;
+        }
+
         protected virtual void OnAwake()
         {
         }

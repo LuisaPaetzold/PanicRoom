@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Tobii.Research.Unity;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -13,6 +14,7 @@ public class Enemy : MonoBehaviour
     private Player player;
     private GameMaster gameMaster;
     private AudioSource audioSource;
+    private VRGazeTrail eyeData;
 
     public AudioClip JumpScareSound;
 
@@ -30,6 +32,7 @@ public class Enemy : MonoBehaviour
         player = FindObjectOfType<Player>();
         gameMaster = FindObjectOfType<GameMaster>();
         audioSource = FindObjectOfType<AudioSource>();
+        eyeData = FindObjectOfType<VRGazeTrail>();
 
         if (RetreatPosition != null)
         {
@@ -89,14 +92,32 @@ public class Enemy : MonoBehaviour
     {
         if (movePositions != null)
         {
-            int children = movePositions.transform.childCount;
+            List<GameObject> possiblePositions = new List<GameObject>();
+            foreach (Transform child in movePositions.transform)
+            {
+                possiblePositions.Add(child.gameObject);
+            }
+
+            if (eyeData != null)
+            {
+                for (int i = possiblePositions.Count - 1; i >= 0; i--)
+                {
+                    GameObject posCandidate = possiblePositions[i];
+                    if (posCandidate.transform == eyeData.GetLatestObjectHit())
+                    {
+                        possiblePositions.Remove(posCandidate);
+                    }
+                }
+            }
+       
+            int children = possiblePositions.Count;
             int index = Random.Range(0, children);
 
-            Transform newPos = movePositions.transform.GetChild(index);
+            GameObject newPos = possiblePositions[index];
 
             if (newPos != null)
             {
-                transform.position = newPos.position;
+                transform.position = newPos.transform.position;
                 Debug.Log("Moved to: " + newPos.gameObject.name);
                 retreated = false;
                 currentRetreatTime = 0f;
