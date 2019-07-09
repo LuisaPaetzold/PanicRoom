@@ -45,7 +45,8 @@ public class Flashlight : MonoBehaviour
         audioSource = FindObjectOfType<AudioSource>();
 
         arduinoPort = new SerialPort("COM" + portNumber, baudRate);
-    
+
+        en = FindObjectOfType<Enemy>();
 
         try
         {
@@ -157,8 +158,11 @@ public class Flashlight : MonoBehaviour
         }
         else
         {
-            // light is off, enemy is no longer hit by light, tell it
-            en.isLitOn = false;
+            if (en != null)
+            {
+                // light is off, enemy is no longer hit by light, tell it
+                en.isLitOn = false;
+            }
         }
     }
 
