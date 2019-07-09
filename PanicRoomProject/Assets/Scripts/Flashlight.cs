@@ -64,32 +64,33 @@ public class Flashlight : MonoBehaviour
         if (arduinoPort != null &&
             arduinoPort.IsOpen)
         {
-            degree = (float)System.Convert.ToDouble(arduinoPort.ReadLine());
+			try {
+				degree =arduinoPort.ReadLine();
+			}
+			catch{
+				degree = null;
+			}
+            
         }
 
         //Debug.Log(currentPower);
 
 		Debug.Log(degree.ToString());
+		if (degree != null) {
+			if (!fingerTriggered) {
+				if (degree.Equals ("1")) {
+					fingerTriggered = true;
+				}
 
-        if (!fingerTriggered)
-        {
-            if (degree <= GloveThreashhold)
-            {
-                fingerTriggered = true;
-            }
-
-            if (fingerTriggered)
-            {
-                LampTrigger();
-            }
-        }
-        else if(fingerTriggered)
-        {
-            if (degree > GloveThreashhold)
-            {
-                fingerTriggered = false;
-            }
-        }
+				if (fingerTriggered) {
+					LampTrigger ();
+				}
+			} else if (fingerTriggered) {
+				if (degree.Equals ("0")) {
+					fingerTriggered = false;
+				}
+			}
+		}
 
         if (Input.GetKeyDown(KeyCode.F))
         {
