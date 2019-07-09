@@ -28,6 +28,7 @@ public class Enemy : MonoBehaviour
     public Light enemyLight;
 
     public AudioClip HurtByLight;
+    public AudioClip DisappearSound;
 
     private bool alreadyPlayedInLocation = false;
     private MovePositions currentPos;
@@ -105,6 +106,10 @@ public class Enemy : MonoBehaviour
             vib.shiftVibrationsLegs(150);
             alreadyPlayedInLocation = false;
             currentPos = null;
+            if (audioSource != null)
+            {
+                audioSource.PlayOneShot(DisappearSound);
+            }
         }
     }
 
@@ -192,7 +197,7 @@ public class Enemy : MonoBehaviour
         StartCoroutine(Shake());
         if (audioSource != null)
         {
-            audioSource.PlayOneShot(HurtByLight);
+            audioSource.PlayOneShot(HurtByLight, 0.3f);
         }
     }
 

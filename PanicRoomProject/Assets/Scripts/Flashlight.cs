@@ -180,11 +180,6 @@ public class Flashlight : MonoBehaviour
             {
                 LampOn();
             }
-
-            if (audioSource != null)
-            {
-                audioSource.PlayOneShot(FlashlightSound);
-            }
         }
     }
 
@@ -204,6 +199,11 @@ public class Flashlight : MonoBehaviour
                 l.gameObject.SetActive(true);
             }
         }
+
+        if (audioSource != null)
+        {
+            audioSource.PlayOneShot(FlashlightSound);
+        }
     }
 
     public void LampOff()
@@ -216,6 +216,11 @@ public class Flashlight : MonoBehaviour
             {
                 l.gameObject.SetActive(false);
             }
+        }
+
+        if (audioSource != null)
+        {
+            audioSource.PlayOneShot(FlashlightSound);
         }
     }
 
