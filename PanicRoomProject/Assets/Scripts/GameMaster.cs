@@ -16,8 +16,8 @@ public class GameMaster : MonoBehaviour
     public float AttackTimeMin = 10f;
     public float AttackTimeMax = 20f;
 
-    private float AttackTime = 5f;
-    private float WaitTime = 20f;
+    internal float AttackTime = 5f;
+    internal float WaitTime = 20f;
 
     public float SecondsToWinGame = 180f;
 

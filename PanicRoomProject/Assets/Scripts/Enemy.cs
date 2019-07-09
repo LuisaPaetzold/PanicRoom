@@ -27,6 +27,11 @@ public class Enemy : MonoBehaviour
     public Animator anim;
     public Light enemyLight;
 
+    public AudioClip HurtByLight;
+
+    private bool alreadyPlayedInLocation = false;
+    private MovePositions currentPos;
+
     void Start ()
     {
         player = FindObjectOfType<Player>();
@@ -59,6 +64,20 @@ public class Enemy : MonoBehaviour
                 if (!isLitOn)
                 {
                     currentAttackTime += Time.deltaTime;
+
+                    if (gameMaster != null
+                        && currentAttackTime >= gameMaster.AttackTime / 2
+                        && !alreadyPlayedInLocation
+                        && currentPos != null)
+                    {
+                        AudioClip sound = currentPos.GetRandomSound();
+                        if (sound != null
+                            && audioSource != null)
+                        {
+                            audioSource.PlayOneShot(sound);
+                            alreadyPlayedInLocation = true;
+                        }
+                    }
                 }
             }
         }
@@ -84,7 +103,8 @@ public class Enemy : MonoBehaviour
             retreated = true;
             currentAttackTime = 0f;
             vib.shiftVibrationsLegs(150);
-            
+            alreadyPlayedInLocation = false;
+            currentPos = null;
         }
     }
 
@@ -118,6 +138,7 @@ public class Enemy : MonoBehaviour
             if (newPos != null)
             {
                 transform.position = newPos.transform.position;
+                currentPos = newPos.GetComponent<MovePositions>();
                 Debug.Log("Moved to: " + newPos.gameObject.name);
                 retreated = false;
                 currentRetreatTime = 0f;
@@ -169,6 +190,10 @@ public class Enemy : MonoBehaviour
     public void StartShaking()
     {
         StartCoroutine(Shake());
+        if (audioSource != null)
+        {
+            audioSource.PlayOneShot(HurtByLight);
+        }
     }
 
     private IEnumerator Shake()
