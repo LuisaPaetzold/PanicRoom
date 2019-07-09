@@ -19,7 +19,7 @@ public class Flashlight : MonoBehaviour
 	public short portNumber;
 	public int baudRate;
 
-	private float degree = 180;
+	private string degree;
 
     private bool fingerTriggered;
     public float GloveThreashhold = 10f;
@@ -75,7 +75,6 @@ public class Flashlight : MonoBehaviour
 
         //Debug.Log(currentPower);
 
-		Debug.Log(degree.ToString());
 		if (degree != null) {
 			if (!fingerTriggered) {
 				if (degree.Equals ("1")) {
@@ -155,6 +154,11 @@ public class Flashlight : MonoBehaviour
                     en.isLitOn = false;
                 }
             }
+        }
+        else
+        {
+            // light is off, enemy is no longer hit by light, tell it
+            en.isLitOn = false;
         }
     }
 
